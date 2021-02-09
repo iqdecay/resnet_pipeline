@@ -7,7 +7,7 @@ from torch import nn, optim
 from torch.utils.data.dataloader import DataLoader
 
 from constants import MODEL_DIR, GPU
-
+from report import Report
 from minicifar import minicifar_train, minicifar_test, train_sampler, \
     valid_sampler
 
@@ -117,12 +117,16 @@ class Pipeline(object):
     def run(self, overwrite=True):
         if not os.path.exists(self.directory):
             os.mkdir(self.directory)
-        # TODO : use train and val_losses and so on
-        train_losses, val_losses, duration = self.train()
+        train_losses, val_losses, train_time = self.train()
         if overwrite:
             path = os.path.join(self.directory, self.name + ".pth")
             torch.save(self.model.state_dict(), path)
             logging.info(f"Saved model under {path}")
-        # TODO : use the accuracy
-        accuracy, duration = self.test()
+        accuracy, inf_time = self.test()
+        architecture = self.name.split("_")[0]
+        report = Report(self.directory, architecture, self.lr, self.n_epochs,
+                        train_losses,
+                        val_losses, train_time, accuracy,
+                        inf_time)
+        report.save()
         del self.model
