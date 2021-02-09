@@ -1,9 +1,10 @@
 import logging
+import os
 
 import torch
-from GPUtil import showUtilization as gpu_usage
 
 from pipeline import Pipeline
+from constants import MODEL_DIR
 from resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
 from report import Report
 
@@ -12,6 +13,8 @@ if __name__ == '__main__':
                         level=logging.INFO,
                         datefmt='%Y-%m-%d %H:%M:%S'
                         )
+    if not os.path.exists(MODEL_DIR):
+        os.mkdir(MODEL_DIR)
     res18 = (ResNet18(), "18")
     res34 = (ResNet34(), "34")
     res50 = (ResNet50(), "50")
