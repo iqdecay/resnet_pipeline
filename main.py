@@ -20,11 +20,14 @@ if __name__ == '__main__':
     res50 = (ResNet50(), "50")
     res101 = (ResNet101(), "101")
     res152 = (ResNet101(), "152")
-    all_resnets = [res18, res34, res50, res101, res152]
+    # all_resnets = [res18, res34, res50, res101, res152]
+    all_resnets = [res18]
+    all_epochs = [100]
+    all_lr = [0.01]
 
     for model, architecture in all_resnets:
-        for lr in [0.1, 0.01, 0.001]:
-            for n_epoch in [10, 50]:
+        for lr in all_lr:
+            for n_epoch in all_epochs:
                 name = f"ResNet{architecture}_{lr}_{n_epoch}epoch"
                 pipeline = Pipeline(model, lr, n_epoch, name)
                 pipeline.run()
